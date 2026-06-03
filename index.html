@@ -58,7 +58,7 @@
         }
 
         body {
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', 'Noto Sans KR', sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             margin: 0;
@@ -107,13 +107,20 @@
             font-size: 0.9rem;
         }
 
-        /* 配色切换器 */
-        .theme-switcher {
+        /* 配色和语言切换器 */
+        .switchers {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .theme-switcher, .language-switcher {
             display: flex;
             gap: 8px;
         }
 
-        .theme-btn {
+        .theme-btn, .lang-btn {
             border: 1px solid var(--text-main);
             padding: 6px 12px;
             border-radius: 20px;
@@ -127,6 +134,17 @@
         .theme-btn.pink { background-color: #ffb6c1; }
         .theme-btn.blue { background-color: #b2ebf2; }
         .theme-btn.white { background-color: #ffffff; }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--nav-text);
+            border-color: var(--nav-text);
+        }
+
+        .lang-btn.active {
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
 
         /* 主容器 */
         .container {
@@ -176,6 +194,7 @@
             background-color: #fafafa;
             color: var(--text-main);
             outline: none;
+            font-family: inherit;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -260,7 +279,7 @@
             padding: 12px 15px;
             border-radius: 12px;
             margin-bottom: 10px;
-            border-left: 5px solid var(--accent-color);
+            border-left: 5px solid var(--accent);
             animation: slideIn 0.3s ease;
         }
 
@@ -271,7 +290,7 @@
 
         .task-days {
             font-weight: bold;
-            color: var(--accent-color);
+            color: var(--accent);
             font-size: 0.85rem;
         }
 
@@ -294,6 +313,7 @@
             color: white;
             font-size: 0.85rem;
             box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+            cursor: pointer;
         }
 
         @keyframes breathe {
@@ -391,20 +411,27 @@
         }
     </style>
 </head>
-<body class="theme-blue"> <!-- 默认浅蓝主题 -->
+<body class="theme-blue">
 
     <!-- 顶部导航 -->
     <header>
         <div class="logo-area">
-            <h1>🚀 智能学霸空间 2.0</h1>
+            <h1>🚀 <span data-i18n="appName">智能学霸空间 2.0</span></h1>
             <div class="star-badge">
-                <span>🌟</span> <span id="starScore">0</span> Stars
+                <span>🌟</span> <span id="starScore">0</span> <span data-i18n="stars">Stars</span>
             </div>
         </div>
-        <div class="theme-switcher">
-            <button class="theme-btn pink" onclick="setTheme('pink')">粉色</button>
-            <button class="theme-btn blue" onclick="setTheme('blue')">浅蓝</button>
-            <button class="theme-btn white" onclick="setTheme('white')">白色</button>
+        <div class="switchers">
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="setLanguage('zh')">中文</button>
+                <button class="lang-btn" onclick="setLanguage('en')">English</button>
+                <button class="lang-btn" onclick="setLanguage('ko')">한국어</button>
+            </div>
+            <div class="theme-switcher">
+                <button class="theme-btn pink" onclick="setTheme('pink')">粉色</button>
+                <button class="theme-btn blue" onclick="setTheme('blue')">浅蓝</button>
+                <button class="theme-btn white" onclick="setTheme('white')">白色</button>
+            </div>
         </div>
     </header>
 
@@ -412,35 +439,35 @@
         <!-- 左侧：课堂笔记数字化 (解决材料丢失) -->
         <div class="left-panel">
             <section class="card">
-                <h2>📝 课堂即时笔记</h2>
+                <h2>📝 <span data-i18n="classNotes">课堂即时笔记</span></h2>
                 <div class="note-form">
                     <select id="courseName">
-                        <option value="数学">数学 (Mathematics)</option>
-                        <option value="语文">语文 (Chinese)</option>
-                        <option value="英语">英语 (English)</option>
-                        <option value="物理/化学/生物">物理/化学/生物 (Science)</option>
-                        <option value="历史/地理/政治">历史/地理/政治 (Social Studies)</option>
-                        <option value="其他">其他 (Other)</option>
+                        <option value="math" data-i18n="math">数学 (Mathematics)</option>
+                        <option value="chinese" data-i18n="chinese">语文 (Chinese)</option>
+                        <option value="english" data-i18n="english">英语 (English)</option>
+                        <option value="science" data-i18n="science">物理/化学/生物 (Science)</option>
+                        <option value="social" data-i18n="social">历史/地理/政治 (Social Studies)</option>
+                        <option value="other" data-i18n="other">其他 (Other)</option>
                     </select>
-                    <input type="text" id="noteTitle" placeholder="输入笔记标题（例如：勾股定理推导）">
-                    <textarea id="noteContent" placeholder="在此处记录老师讲课的核心要点、作业提示、或是随堂公式..."></textarea>
-                    <button class="btn" onclick="saveNote()">保存到本地资料库 (+10 🌟)</button>
+                    <input type="text" id="noteTitle" data-i18n-placeholder="noteTitlePlaceholder" placeholder="输入笔记标题（例如：勾股定理推导）">
+                    <textarea id="noteContent" data-i18n-placeholder="noteContentPlaceholder" placeholder="在此处记录老师讲课的核心要点、作业提示、或是随堂公式..."></textarea>
+                    <button class="btn" onclick="saveNote()"><span data-i18n="saveNote">保存到本地资料库 (+10 🌟)</span></button>
                 </div>
             </section>
 
             <section class="card">
-                <h2>📚 我的数字化资料库</h2>
+                <h2>📚 <span data-i18n="myLibrary">我的数字化资料库</span></h2>
                 <!-- 实时搜索与科目筛选功能 -->
                 <div class="filter-bar">
-                    <input type="text" id="searchBar" oninput="renderNotes()" placeholder="🔍 输入关键词搜索笔记...">
+                    <input type="text" id="searchBar" oninput="renderNotes()" data-i18n-placeholder="searchPlaceholder" placeholder="🔍 输入关键词搜索笔记...">
                     <select id="filterSubject" onchange="renderNotes()">
-                        <option value="ALL">全部学科</option>
-                        <option value="数学">数学</option>
-                        <option value="语文">语文</option>
-                        <option value="英语">英语</option>
-                        <option value="物理/化学/生物">物理/化学/生物</option>
-                        <option value="历史/地理/政治">历史/地理/政治</option>
-                        <option value="其他">其他</option>
+                        <option value="ALL" data-i18n="allSubjects">全部学科</option>
+                        <option value="math" data-i18n="math">数学</option>
+                        <option value="chinese" data-i18n="chinese">语文</option>
+                        <option value="english" data-i18n="english">英语</option>
+                        <option value="science" data-i18n="science">物理/化学/生物</option>
+                        <option value="social" data-i18n="social">历史/地理/政治</option>
+                        <option value="other" data-i18n="other">其他</option>
                     </select>
                 </div>
                 <div id="noteList" class="note-list">
@@ -449,8 +476,8 @@
                 
                 <!-- 备份与还原 (双重保险，防清空) -->
                 <div class="backup-zone">
-                    <button class="btn btn-secondary" onclick="exportData()">💾 备份资料包</button>
-                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📂 导入还原</button>
+                    <button class="btn btn-secondary" onclick="exportData()"><span data-i18n="backup">💾 备份资料包</span></button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()"><span data-i18n="restore">📂 导入还原</span></button>
                     <input type="file" id="importFile" style="display:none;" onchange="importData(event)">
                 </div>
             </section>
@@ -460,11 +487,11 @@
         <div class="right-panel">
             <!-- 1. 作业截止日期管理器 -->
             <section class="card">
-                <h2>📅 作业与截止倒计时</h2>
+                <h2>📅 <span data-i18n="homeworkDeadline">作业与截止倒计时</span></h2>
                 <div class="note-form">
-                    <input type="text" id="taskName" placeholder="写完什么作业？（例如：物理试卷一张）">
+                    <input type="text" id="taskName" data-i18n-placeholder="taskNamePlaceholder" placeholder="写完什么作业？（例如：物理试卷一张）">
                     <input type="date" id="taskDate">
-                    <button class="btn" style="background: var(--accent);" onclick="addTask()">添加截止提醒 (+10 🌟)</button>
+                    <button class="btn" style="background: var(--accent);" onclick="addTask()"><span data-i18n="addTask">添加截止提醒 (+10 🌟)</span></button>
                 </div>
                 <div id="taskList" style="margin-top:15px;">
                     <!-- 动态生成作业倒计时 -->
@@ -473,12 +500,12 @@
 
             <!-- 2. 压力调节空间 (新增趣味解压小游戏) -->
             <section class="card relax-box">
-                <h2>🧘 压力释放调节阀</h2>
-                <p style="font-size: 0.85rem; color: var(--text-secondary);">深呼吸训练：盯着圆圈，跟随节奏呼气和吸气。</p>
-                <div class="breathe-circle" onclick="breatheAward()">吸气...呼气</div>
+                <h2>🧘 <span data-i18n="stressRelief">压力释放调节阀</span></h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);" data-i18n="breathingInstructions">深呼吸训练：盯着圆圈，跟随节奏呼气和吸气。</p>
+                <div class="breathe-circle" onclick="breatheAward()"><span data-i18n="breathe">吸气...呼气</span></div>
                 
                 <!-- 趣味解压捏泡泡 -->
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;" data-i18n="bubbleInstructions">
                     手痒、心烦？来捏破这些"焦虑泡泡"：
                 </p>
                 <div class="bubble-wrap" id="bubbleWrap">
@@ -488,22 +515,22 @@
 
             <!-- 3. 早起自律晨跑卡 (解决起床难) -->
             <section class="card alarm-card">
-                <h2>⏰ 早起与健康管理</h2>
+                <h2>⏰ <span data-i18n="earlyRising">早起与健康管理</span></h2>
                 <div style="font-size: 2.2rem; margin: 10px 0; font-weight: bold; letter-spacing: 2px;">07:00 AM</div>
-                <p style="margin: 0; font-size: 0.95rem;">早起挑战目标</p>
+                <p style="margin: 0; font-size: 0.95rem;" data-i18n="earlyRisingGoal">早起挑战目标</p>
                 
                 <div class="habit-checklist">
                     <div class="habit-item">
                         <input type="checkbox" id="sleepHabit" onchange="awardHabit(this, 15)">
-                        <label for="sleepHabit">昨晚 22:30 前放下手机睡觉 (+15 🌟)</label>
+                        <label for="sleepHabit" data-i18n="sleepHabit">昨晚 22:30 前放下手机睡觉 (+15 🌟)</label>
                     </div>
                     <div class="habit-item">
                         <input type="checkbox" id="waterHabit" onchange="awardHabit(this, 10)">
-                        <label for="waterHabit">起床后喝一杯温开水 (+10 🌟)</label>
+                        <label for="waterHabit" data-i18n="waterHabit">起床后喝一杯温开水 (+10 🌟)</label>
                     </div>
                     <div class="habit-item">
                         <input type="checkbox" id="bagHabit" onchange="awardHabit(this, 10)">
-                        <label for="bagHabit">整理好了今天的书包 (+10 🌟)</label>
+                        <label for="bagHabit" data-i18n="bagHabit">整理好了今天的书包 (+10 🌟)</label>
                     </div>
                 </div>
             </section>
@@ -511,10 +538,186 @@
     </div>
 
     <script>
-        // --- 初始化状态与学霸星系统 ---
+        // --- 多语言翻译数据 ---
+        const translations = {
+            zh: {
+                appName: "智能学霸空间 2.0",
+                stars: "Stars",
+                classNotes: "课堂即时笔记",
+                myLibrary: "我的数字化资料库",
+                homeworkDeadline: "作业与截止倒计时",
+                stressRelief: "压力释放调节阀",
+                earlyRising: "早起与健康管理",
+                earlyRisingGoal: "早起挑战目标",
+                math: "数学",
+                chinese: "语文",
+                english: "英语",
+                science: "物理/化学/生物",
+                social: "历史/地理/政治",
+                other: "其他",
+                allSubjects: "全部学科",
+                noteTitlePlaceholder: "输入笔记标题（例如：勾股定理推导）",
+                noteContentPlaceholder: "在此处记录老师讲课的核心要点、作业提示、或是随堂公式...",
+                saveNote: "保存到本地资料库 (+10 🌟)",
+                searchPlaceholder: "🔍 输入关键词搜索笔记...",
+                backup: "💾 备份资料包",
+                restore: "📂 导入还原",
+                taskNamePlaceholder: "写完什么作业？（例如：物理试卷一张）",
+                addTask: "添加截止提醒 (+10 🌟)",
+                breathingInstructions: "深呼吸训练：盯着圆圈，跟随节奏呼气和吸气。",
+                breathe: "吸气...呼气",
+                bubbleInstructions: "手痒、心烦？来捏破这些"焦虑泡泡"：",
+                sleepHabit: "昨晚 22:30 前放下手机睡觉 (+15 🌟)",
+                waterHabit: "起床后喝一杯温开水 (+10 🌟)",
+                bagHabit: "整理好了今天的书包 (+10 🌟)",
+                noNotes: "没有找到相关的笔记资料",
+                noTasks: "太棒了！暂时没有截止中的作业了。",
+                confirmDelete: "确定要删除这条笔记吗？",
+                deleteNote: "删除此笔记",
+                daysRemaining: "剩 {days} 天",
+                dueToday: "⏰ 今天截止",
+                overdue: "⚠️ 已逾期",
+                allPopped: "捏完啦！压力值 -100% 🧘，重置一盘吧！",
+                breatheSuccess: "深呼吸打卡成功！每次冥想放松都非常有益于专注力哦！获得 +5 🌟",
+                incompleteFields: "请完整填写笔记的标题和内容哦！",
+                incompleteTask: "请输入完整的作业名称和截止日期！",
+                importSuccess: "🎉 资料成功同步并还原！",
+                importError: "导入的文件格式不正确哦。",
+                parseError: "文件解析出错。",
+                date: "📅"
+            },
+            en: {
+                appName: "Smart Homework Helper Pro 2.0",
+                stars: "Stars",
+                classNotes: "Classroom Notes",
+                myLibrary: "My Digital Library",
+                homeworkDeadline: "Homework & Deadline Countdown",
+                stressRelief: "Stress Relief Valve",
+                earlyRising: "Early Rising & Health",
+                earlyRisingGoal: "Early Rising Challenge",
+                math: "Mathematics",
+                chinese: "Chinese",
+                english: "English",
+                science: "Science",
+                social: "Social Studies",
+                other: "Other",
+                allSubjects: "All Subjects",
+                noteTitlePlaceholder: "Enter note title (e.g., Pythagorean Theorem)",
+                noteContentPlaceholder: "Record the key points from the lecture, homework tips, or formulas...",
+                saveNote: "Save to Library (+10 🌟)",
+                searchPlaceholder: "🔍 Search notes...",
+                backup: "💾 Backup Data",
+                restore: "📂 Import & Restore",
+                taskNamePlaceholder: "What homework to complete? (e.g., Physics worksheet)",
+                addTask: "Add Reminder (+10 🌟)",
+                breathingInstructions: "Breathing exercise: Focus on the circle and follow the rhythm.",
+                breathe: "Inhale...Exhale",
+                bubbleInstructions: "Feeling anxious? Pop these 'anxiety bubbles':",
+                sleepHabit: "Put down phone by 10:30 PM (+15 🌟)",
+                waterHabit: "Drink warm water after waking (+10 🌟)",
+                bagHabit: "Organized school bag today (+10 🌟)",
+                noNotes: "No related notes found",
+                noTasks: "Great! No pending assignments.",
+                confirmDelete: "Are you sure you want to delete this note?",
+                deleteNote: "Delete this note",
+                daysRemaining: "{days} days left",
+                dueToday: "⏰ Due today",
+                overdue: "⚠️ Overdue",
+                allPopped: "All done! Stress reduced by 100% 🧘. Reset?",
+                breatheSuccess: "Breathing exercise completed! Mindfulness improves focus. +5 🌟",
+                incompleteFields: "Please fill in both title and content!",
+                incompleteTask: "Please enter homework name and deadline!",
+                importSuccess: "🎉 Data restored successfully!",
+                importError: "The file format is incorrect.",
+                parseError: "Error parsing file.",
+                date: "📅"
+            },
+            ko: {
+                appName: "스마트 숙제 도우미 Pro 2.0",
+                stars: "별",
+                classNotes: "수업 노트",
+                myLibrary: "나의 디지털 라이브러리",
+                homeworkDeadline: "숙제 및 마감일 카운트다운",
+                stressRelief: "스트레스 해소 밸브",
+                earlyRising: "조기 기상 및 건강관리",
+                earlyRisingGoal: "조기 기상 도전 목표",
+                math: "수학",
+                chinese: "중국어",
+                english: "영어",
+                science: "과학",
+                social: "사회",
+                other: "기타",
+                allSubjects: "모든 과목",
+                noteTitlePlaceholder: "노트 제목 입력 (예: 피타고라스 정리)",
+                noteContentPlaceholder: "강의의 핵심 포인트, 숙제 팁 또는 공식을 기록하세요...",
+                saveNote: "라이브러리에 저장 (+10 🌟)",
+                searchPlaceholder: "🔍 노트 검색...",
+                backup: "💾 데이터 백업",
+                restore: "📂 가져오기 및 복원",
+                taskNamePlaceholder: "어떤 숙제를 완료하시겠습니까? (예: 물리 워크시트)",
+                addTask: "알림 추가 (+10 🌟)",
+                breathingInstructions: "호흡 운동: 원에 집중하고 리듬을 따르세요.",
+                breathe: "들숨...날숨",
+                bubbleInstructions: "불안감을 느끼시나요? 이 '불안 거품'을 터뜨려보세요:",
+                sleepHabit: "저녁 10시 30분 전에 휴대폰 내려놓기 (+15 🌟)",
+                waterHabit: "아침에 따뜻한 물 한잔 마시기 (+10 🌟)",
+                bagHabit: "오늘 책가방 정리하기 (+10 🌟)",
+                noNotes: "관련 노트를 찾을 수 없습니다",
+                noTasks: "좋습니다! 마감일이 있는 과제가 없습니다.",
+                confirmDelete: "이 노트를 삭제하시겠습니까?",
+                deleteNote: "이 노트 삭제",
+                daysRemaining: "{days}일 남음",
+                dueToday: "⏰ 오늘 마감",
+                overdue: "⚠️ 마감 초과",
+                allPopped: "완료! 스트레스 100% 감소 🧘. 다시 하시겠습니까?",
+                breatheSuccess: "호흡 운동 완료! 명상은 집중력을 향상시킵니다. +5 🌟",
+                incompleteFields: "제목과 내용을 모두 작성해주세요!",
+                incompleteTask: "숙제 이름과 마감일을 입력해주세요!",
+                importSuccess: "🎉 데이터를 성공적으로 복원했습니다!",
+                importError: "파일 형식이 올바르지 않습니다.",
+                parseError: "파일 구문 분석 오류.",
+                date: "📅"
+            }
+        };
+
+        // --- 초기화 상태 및 학霸 별 시스템 ---
         let score = parseInt(localStorage.getItem('stu_score') || '0');
         let notes = JSON.parse(localStorage.getItem('stu_notes_v2') || '[]');
         let tasks = JSON.parse(localStorage.getItem('stu_tasks_v2') || '[]');
+        let currentLanguage = localStorage.getItem('stu_language') || 'zh';
+
+        function t(key, replacements = {}) {
+            let text = translations[currentLanguage]?.[key] || translations.zh[key] || key;
+            Object.keys(replacements).forEach(k => {
+                text = text.replace(`{${k}}`, replacements[k]);
+            });
+            return text;
+        }
+
+        function updateTranslations() {
+            // Update all data-i18n attributes
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                el.textContent = t(el.getAttribute('data-i18n'));
+            });
+
+            // Update all data-i18n-placeholder attributes
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+            });
+
+            // Update language button highlights
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.lang-btn:nth-child(${currentLanguage === 'zh' ? 1 : currentLanguage === 'en' ? 2 : 3})`).classList.add('active');
+
+            renderNotes();
+            renderTasks();
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('stu_language', lang);
+            updateTranslations();
+        }
 
         function updateScore(points) {
             score += points;
@@ -536,7 +739,7 @@
             const content = document.getElementById('noteContent').value.trim();
 
             if (!title || !content) {
-                alert("请完整填写笔记的标题和内容哦！");
+                alert(t('incompleteFields'));
                 return;
             }
 
@@ -551,7 +754,6 @@
             notes.unshift(note);
             localStorage.setItem('stu_notes_v2', JSON.stringify(notes));
             
-            // 清空表单，增加成就积分
             document.getElementById('noteTitle').value = '';
             document.getElementById('noteContent').value = '';
             updateScore(10);
@@ -563,7 +765,6 @@
             const searchQuery = document.getElementById('searchBar').value.toLowerCase();
             const subjectFilter = document.getElementById('filterSubject').value;
 
-            // 过滤笔记
             const filtered = notes.filter(n => {
                 const matchesSearch = n.title.toLowerCase().includes(searchQuery) || n.content.toLowerCase().includes(searchQuery);
                 const matchesSubject = (subjectFilter === 'ALL' || n.course === subjectFilter);
@@ -571,25 +772,25 @@
             });
 
             if (filtered.length === 0) {
-                list.innerHTML = '<p style="text-align:center; color:#999; padding: 20px 0;">没有找到相关的笔记资料</p>';
+                list.innerHTML = `<p style="text-align:center; color:#999; padding: 20px 0;">${t('noNotes')}</p>`;
                 return;
             }
 
             list.innerHTML = filtered.map(n => `
                 <div class="note-item">
                     <div class="note-meta">
-                        <span class="subject-tag">${n.course}</span>
-                        <span>📅 ${n.date}</span>
+                        <span class="subject-tag">${t(n.course) || n.course}</span>
+                        <span>${t('date')} ${n.date}</span>
                     </div>
                     <strong>${n.title}</strong>
                     <p style="font-size: 0.9rem; color: #444; margin: 8px 0; white-space: pre-wrap;">${n.content}</p>
-                    <span class="delete-btn" onclick="deleteNote(${n.id})">删除此笔记</span>
+                    <span class="delete-btn" onclick="deleteNote(${n.id})">${t('deleteNote')}</span>
                 </div>
             `).join('');
         }
 
         function deleteNote(id) {
-            if (confirm("确定要删除这条笔记吗？")) {
+            if (confirm(t('confirmDelete'))) {
                 notes = notes.filter(n => n.id !== id);
                 localStorage.setItem('stu_notes_v2', JSON.stringify(notes));
                 renderNotes();
@@ -602,7 +803,7 @@
             const date = document.getElementById('taskDate').value;
 
             if (!name || !date) {
-                alert("请输入完整的作业名称和截止日期！");
+                alert(t('incompleteTask'));
                 return;
             }
 
@@ -617,11 +818,10 @@
 
         function renderTasks() {
             const list = document.getElementById('taskList');
-            // 按照到期日期先后升序排序
             tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
 
             if (tasks.length === 0) {
-                list.innerHTML = '<p style="text-align:center; color:#999; padding:10px 0;">太棒了！暂时没有截止中的作业了。</p>';
+                list.innerHTML = `<p style="text-align:center; color:#999; padding:10px 0;">${t('noTasks')}</p>`;
                 return;
             }
 
@@ -629,7 +829,14 @@
                 const diff = new Date(t.date) - new Date();
                 const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
                 const urgencyStyle = days <= 2 ? 'font-weight:bold; color: #ff7675;' : '';
-                const timeText = days > 0 ? `剩 ${days} 天` : (days === 0 ? '⏰ 今天截止' : '⚠️ 已逾期');
+                let timeText;
+                if (days > 0) {
+                    timeText = translations[currentLanguage]['daysRemaining'].replace('{days}', days);
+                } else if (days === 0) {
+                    timeText = translations[currentLanguage]['dueToday'];
+                } else {
+                    timeText = translations[currentLanguage]['overdue'];
+                }
 
                 return `
                     <div class="task-item">
@@ -647,11 +854,11 @@
         function deleteTask(id) {
             tasks = tasks.filter(t => t.id !== id);
             localStorage.setItem('stu_tasks_v2', JSON.stringify(tasks));
-            updateScore(5); // 额外奖励 5 星
+            updateScore(5);
             renderTasks();
         }
 
-        // --- 备份与防丢失功能 (双保险) ---
+        // --- 备份与防丢失功能 ---
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ notes, tasks, score }));
             const downloadAnchor = document.createElement('a');
@@ -677,15 +884,15 @@
                         localStorage.setItem('stu_notes_v2', JSON.stringify(notes));
                         localStorage.setItem('stu_tasks_v2', JSON.stringify(tasks));
                         localStorage.setItem('stu_score', score);
-                        alert("🎉 资料成功同步并还原！");
+                        alert(t('importSuccess'));
                         renderNotes();
                         renderTasks();
                         document.getElementById('starScore').innerText = score;
                     } else {
-                        alert("导入的文件格式不正确哦。");
+                        alert(t('importError'));
                     }
                 } catch (err) {
-                    alert("文件解析出错。");
+                    alert(t('parseError'));
                 }
             };
             reader.readAsText(file);
@@ -695,14 +902,12 @@
         function renderBubbles() {
             const wrap = document.getElementById('bubbleWrap');
             wrap.innerHTML = '';
-            // 一共 12 个泡泡
             for (let i = 0; i < 12; i++) {
                 const bubble = document.createElement('div');
                 bubble.className = 'bubble';
                 bubble.onclick = function() {
                     if (!bubble.classList.contains('popped')) {
                         bubble.classList.add('popped');
-                        // 播放软爆破音（通过简单震动或音效提示，这里用微弱震动/打卡加积分模拟）
                         updateScore(1);
                         if (navigator.vibrate) navigator.vibrate(20);
                         checkAllPopped();
@@ -717,18 +922,17 @@
             const popped = document.querySelectorAll('.bubble.popped');
             if (all.length === popped.length) {
                 setTimeout(() => {
-                    alert("捏完啦！压力值 -100% 🧘，重置一盘吧！");
+                    alert(t('allPopped'));
                     renderBubbles();
                 }, 300);
             }
         }
 
         function breatheAward() {
-            alert("深呼吸打卡成功！每次冥想放松都非常有益于专注力哦！获得 +5 🌟");
+            alert(t('breatheSuccess'));
             updateScore(5);
         }
 
-        // 自律打卡积分
         function awardHabit(checkbox, points) {
             if (checkbox.checked) {
                 updateScore(points);
@@ -739,14 +943,11 @@
 
         // --- 初始化加载 ---
         window.onload = () => {
-            // 加载主题
             const savedTheme = localStorage.getItem('stu_theme') || 'blue';
             setTheme(savedTheme);
 
-            // 渲染数据
             document.getElementById('starScore').innerText = score;
-            renderNotes();
-            renderTasks();
+            updateTranslations();
             renderBubbles();
         };
     </script>
