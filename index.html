@@ -423,9 +423,9 @@
         </div>
         <div class="switchers">
             <div class="language-switcher">
-                <button class="lang-btn active" onclick="setLanguage('zh')">中文</button>
-                <button class="lang-btn" onclick="setLanguage('en')">English</button>
-                <button class="lang-btn" onclick="setLanguage('ko')">한국어</button>
+                <button class="lang-btn active" data-lang="zh" onclick="setLanguage('zh')">中文</button>
+                <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">English</button>
+                <button class="lang-btn" data-lang="ko" onclick="setLanguage('ko')">한국어</button>
             </div>
             <div class="theme-switcher">
                 <button class="theme-btn pink" onclick="setTheme('pink')">粉色</button>
@@ -705,9 +705,13 @@
                 el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
             });
 
-            // Update language button highlights
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.lang-btn:nth-child(${currentLanguage === 'zh' ? 1 : currentLanguage === 'en' ? 2 : 3})`).classList.add('active');
+            // Update language button highlights - FIXED!
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === currentLanguage) {
+                    btn.classList.add('active');
+                }
+            });
 
             renderNotes();
             renderTasks();
@@ -825,8 +829,8 @@
                 return;
             }
 
-            list.innerHTML = tasks.map(t => {
-                const diff = new Date(t.date) - new Date();
+            list.innerHTML = tasks.map(task => {
+                const diff = new Date(task.date) - new Date();
                 const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
                 const urgencyStyle = days <= 2 ? 'font-weight:bold; color: #ff7675;' : '';
                 let timeText;
@@ -841,11 +845,11 @@
                 return `
                     <div class="task-item">
                         <div class="task-info">
-                            <strong>${t.name}</strong>
-                            <small style="color:var(--text-secondary);">截止: ${t.date}</small>
+                            <strong>${task.name}</strong>
+                            <small style="color:var(--text-secondary);">截止: ${task.date}</small>
                         </div>
                         <div class="task-days" style="${urgencyStyle}">${timeText}</div>
-                        <div onclick="deleteTask(${t.id})" style="cursor:pointer; margin-left:10px; font-size:1.3rem;" title="标记已完成">✅</div>
+                        <div onclick="deleteTask(${task.id})" style="cursor:pointer; margin-left:10px; font-size:1.3rem;" title="标记已完成">✅</div>
                     </div>
                 `;
             }).join('');
