@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能学霸空间 Pro 2.0</title>
+    <style>
+        /* CSS 变量：定义三种配色方案 */
+        :root {
+            --primary: #4a90e2;
+            --accent: #ff7675;
+            --success: #2ecc71;
+            --bg: #f5f6fa;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-secondary: #636e72;
+            --nav-bg: #4a90e2;
+            --nav-text: #ffffff;
+        }
+
+        /* 粉色主题 */
+        body.theme-pink {
+            --bg: #fff0f5;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-secondary: #5f27cd;
+            --nav-bg: #ffb6c1;
+            --nav-text: #2d3436;
+            --primary: #ff8093;
+        }
+
+        /* 浅蓝色主题 */
+        body.theme-blue {
+            --bg: #e0f7fa;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-secondary: #00838f;
+            --nav-bg: #b2ebf2;
+            --nav-text: #2d3436;
+            --primary: #00a8ff;
+        }
+
+        /* 白色/极简灰主题 */
+        body.theme-white {
+            --bg: #f5f6fa;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-secondary: #7f8c8d;
+            --nav-bg: #ffffff;
+            --nav-text: #2d3436;
+            --primary: #4a90e2;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* 顶部导航栏 */
+        header {
+            background-color: var(--nav-bg);
+            color: var(--nav-text);
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        /* 学霸成就星星勋章 */
+        .star-badge {
+            background: rgba(255, 234, 167, 0.3);
+            border: 1px solid #f1c40f;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #d35400;
+            font-size: 0.9rem;
+        }
+
+        /* 配色切换器 */
+        .theme-switcher {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-btn {
+            border: 1px solid var(--text-main);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            background: #fff;
+            color: #000;
+        }
+
+        .theme-btn.pink { background-color: #ffb6c1; }
+        .theme-btn.blue { background-color: #b2ebf2; }
+        .theme-btn.white { background-color: #ffffff; }
+
+        /* 主容器 */
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 850px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 统一卡片样式 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            border-left: 5px solid var(--primary);
+            padding-left: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-main);
+        }
+
+        /* 表单输入控件 */
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background-color: #fafafa;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            background-color: #fff;
+        }
+
+        textarea {
+            height: 110px;
+            resize: vertical;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #4a5568;
+            margin-top: 8px;
+        }
+
+        /* 搜索和筛选 */
+        .filter-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* 笔记列表效果 */
+        .note-list {
+            margin-top: 15px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .note-item {
+            padding: 15px;
+            border-bottom: 1.5px dashed #eee;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .note-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .subject-tag {
+            background-color: var(--primary);
+            color: white;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        /* 作业清单样式 */
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 118, 117, 0.08);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 5px solid var(--accent-color);
+            animation: slideIn 0.3s ease;
+        }
+
+        .task-info strong {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .task-days {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 0.85rem;
+        }
+
+        /* 呼吸气泡动画 */
+        .relax-box {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .breathe-circle {
+            width: 110px;
+            height: 110px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: breathe 8s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.85rem;
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.4); opacity: 1; }
+        }
+
+        /* 解压捏泡泡游戏 */
+        .bubble-wrap {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+            justify-items: center;
+        }
+
+        .bubble {
+            width: 30px;
+            height: 30px;
+            background: #dfe6e9;
+            border-radius: 50%;
+            box-shadow: inset -3px -3px 5px rgba(0,0,0,0.15), inset 3px 3px 5px rgba(255,255,255,0.8);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .bubble.popped {
+            background: #b2bec3;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+            transform: scale(0.9);
+            pointer-events: none;
+        }
+
+        /* 早起与自律板块 */
+        .alarm-card {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            text-align: center;
+        }
+
+        .alarm-card h2 {
+            border: none;
+            color: white;
+            justify-content: center;
+        }
+
+        .habit-checklist {
+            text-align: left;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .habit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .habit-item input {
+            width: auto;
+            margin: 0;
+        }
+
+        /* 备份还原区域按钮组合 */
+        .backup-zone {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .backup-zone button {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.8rem;
+        }
+
+        .delete-btn {
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            display: inline-block;
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="theme-blue"> <!-- 默认浅蓝主题 -->
+
+    <!-- 顶部导航 -->
+    <header>
+        <div class="logo-area">
+            <h1>🚀 智能学霸空间 2.0</h1>
+            <div class="star-badge">
+                <span>🌟</span> <span id="starScore">0</span> Stars
+            </div>
+        </div>
+        <div class="theme-switcher">
+            <button class="theme-btn pink" onclick="setTheme('pink')">粉色</button>
+            <button class="theme-btn blue" onclick="setTheme('blue')">浅蓝</button>
+            <button class="theme-btn white" onclick="setTheme('white')">白色</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 左侧：课堂笔记数字化 (解决材料丢失) -->
+        <div class="left-panel">
+            <section class="card">
+                <h2>📝 课堂即时笔记</h2>
+                <div class="note-form">
+                    <select id="courseName">
+                        <option value="数学">数学 (Mathematics)</option>
+                        <option value="语文">语文 (Chinese)</option>
+                        <option value="英语">英语 (English)</option>
+                        <option value="物理/化学/生物">物理/化学/生物 (Science)</option>
+                        <option value="历史/地理/政治">历史/地理/政治 (Social Studies)</option>
+                        <option value="其他">其他 (Other)</option>
+                    </select>
+                    <input type="text" id="noteTitle" placeholder="输入笔记标题（例如：勾股定理推导）">
+                    <textarea id="noteContent" placeholder="在此处记录老师讲课的核心要点、作业提示、或是随堂公式..."></textarea>
+                    <button class="btn" onclick="saveNote()">保存到本地资料库 (+10 🌟)</button>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>📚 我的数字化资料库</h2>
+                <!-- 实时搜索与科目筛选功能 -->
+                <div class="filter-bar">
+                    <input type="text" id="searchBar" oninput="renderNotes()" placeholder="🔍 输入关键词搜索笔记...">
+                    <select id="filterSubject" onchange="renderNotes()">
+                        <option value="ALL">全部学科</option>
+                        <option value="数学">数学</option>
+                        <option value="语文">语文</option>
+                        <option value="英语">英语</option>
+                        <option value="物理/化学/生物">物理/化学/生物</option>
+                        <option value="历史/地理/政治">历史/地理/政治</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div id="noteList" class="note-list">
+                    <!-- 动态生成笔记卡片 -->
+                </div>
+                
+                <!-- 备份与还原 (双重保险，防清空) -->
+                <div class="backup-zone">
+                    <button class="btn btn-secondary" onclick="exportData()">💾 备份资料包</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📂 导入还原</button>
+                    <input type="file" id="importFile" style="display:none;" onchange="importData(event)">
+                </div>
+            </section>
+        </div>
+
+        <!-- 右侧：自我管理面板 (解决遗忘、压力过大与早起难) -->
+        <div class="right-panel">
+            <!-- 1. 作业截止日期管理器 -->
+            <section class="card">
+                <h2>📅 作业与截止倒计时</h2>
+                <div class="note-form">
+                    <input type="text" id="taskName" placeholder="写完什么作业？（例如：物理试卷一张）">
+                    <input type="date" id="taskDate">
+                    <button class="btn" style="background: var(--accent);" onclick="addTask()">添加截止提醒 (+10 🌟)</button>
+                </div>
+                <div id="taskList" style="margin-top:15px;">
+                    <!-- 动态生成作业倒计时 -->
+                </div>
+            </section>
+
+            <!-- 2. 压力调节空间 (新增趣味解压小游戏) -->
+            <section class="card relax-box">
+                <h2>🧘 压力释放调节阀</h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">深呼吸训练：盯着圆圈，跟随节奏呼气和吸气。</p>
+                <div class="breathe-circle" onclick="breatheAward()">吸气...呼气</div>
+                
+                <!-- 趣味解压捏泡泡 -->
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;">
+                    手痒、心烦？来捏破这些"焦虑泡泡"：
+                </p>
+                <div class="bubble-wrap" id="bubbleWrap">
+                    <!-- 动态生成泡泡纸 -->
+                </div>
+            </section>
+
+            <!-- 3. 早起自律晨跑卡 (解决起床难) -->
+            <section class="card alarm-card">
+                <h2>⏰ 早起与健康管理</h2>
+                <div style="font-size: 2.2rem; margin: 10px 0; font-weight: bold; letter-spacing: 2px;">07:00 AM</div>
+                <p style="margin: 0; font-size: 0.95rem;">早起挑战目标</p>
+                
+                <div class="habit-checklist">
+                    <div class="habit-item">
+                        <input type="checkbox" id="sleepHabit" onchange="awardHabit(this, 15)">
+                        <label for="sleepHabit">昨晚 22:30 前放下手机睡觉 (+15 🌟)</label>
+                    </div>
+                    <div class="habit-item">
+                        <input type="checkbox" id="waterHabit" onchange="awardHabit(this, 10)">
+                        <label for="waterHabit">起床后喝一杯温开水 (+10 🌟)</label>
+                    </div>
+                    <div class="habit-item">
+                        <input type="checkbox" id="bagHabit" onchange="awardHabit(this, 10)">
+                        <label for="bagHabit">整理好了今天的书包 (+10 🌟)</label>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // --- 初始化状态与学霸星系统 ---
+        let score = parseInt(localStorage.getItem('stu_score') || '0');
+        let notes = JSON.parse(localStorage.getItem('stu_notes_v2') || '[]');
+        let tasks = JSON.parse(localStorage.getItem('stu_tasks_v2') || '[]');
+
+        function updateScore(points) {
+            score += points;
+            localStorage.setItem('stu_score', score);
+            document.getElementById('starScore').innerText = score;
+        }
+
+        // 切换配色方案
+        function setTheme(theme) {
+            document.body.className = '';
+            document.body.classList.add('theme-' + theme);
+            localStorage.setItem('stu_theme', theme);
+        }
+
+        // --- 笔记数字化模块逻辑 ---
+        function saveNote() {
+            const course = document.getElementById('courseName').value;
+            const title = document.getElementById('noteTitle').value.trim();
+            const content = document.getElementById('noteContent').value.trim();
+
+            if (!title || !content) {
+                alert("请完整填写笔记的标题和内容哦！");
+                return;
+            }
+
+            const note = {
+                id: Date.now(),
+                course,
+                title,
+                content,
+                date: new Date().toLocaleString()
+            };
+
+            notes.unshift(note);
+            localStorage.setItem('stu_notes_v2', JSON.stringify(notes));
+            
+            // 清空表单，增加成就积分
+            document.getElementById('noteTitle').value = '';
+            document.getElementById('noteContent').value = '';
+            updateScore(10);
+            renderNotes();
+        }
+
+        function renderNotes() {
+            const list = document.getElementById('noteList');
+            const searchQuery = document.getElementById('searchBar').value.toLowerCase();
+            const subjectFilter = document.getElementById('filterSubject').value;
+
+            // 过滤笔记
+            const filtered = notes.filter(n => {
+                const matchesSearch = n.title.toLowerCase().includes(searchQuery) || n.content.toLowerCase().includes(searchQuery);
+                const matchesSubject = (subjectFilter === 'ALL' || n.course === subjectFilter);
+                return matchesSearch && matchesSubject;
+            });
+
+            if (filtered.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#999; padding: 20px 0;">没有找到相关的笔记资料</p>';
+                return;
+            }
+
+            list.innerHTML = filtered.map(n => `
+                <div class="note-item">
+                    <div class="note-meta">
+                        <span class="subject-tag">${n.course}</span>
+                        <span>📅 ${n.date}</span>
+                    </div>
+                    <strong>${n.title}</strong>
+                    <p style="font-size: 0.9rem; color: #444; margin: 8px 0; white-space: pre-wrap;">${n.content}</p>
+                    <span class="delete-btn" onclick="deleteNote(${n.id})">删除此笔记</span>
+                </div>
+            `).join('');
+        }
+
+        function deleteNote(id) {
+            if (confirm("确定要删除这条笔记吗？")) {
+                notes = notes.filter(n => n.id !== id);
+                localStorage.setItem('stu_notes_v2', JSON.stringify(notes));
+                renderNotes();
+            }
+        }
+
+        // --- 作业到期管理器逻辑 ---
+        function addTask() {
+            const name = document.getElementById('taskName').value.trim();
+            const date = document.getElementById('taskDate').value;
+
+            if (!name || !date) {
+                alert("请输入完整的作业名称和截止日期！");
+                return;
+            }
+
+            tasks.push({ id: Date.now(), name, date });
+            localStorage.setItem('stu_tasks_v2', JSON.stringify(tasks));
+            
+            document.getElementById('taskName').value = '';
+            document.getElementById('taskDate').value = '';
+            updateScore(10);
+            renderTasks();
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('taskList');
+            // 按照到期日期先后升序排序
+            tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (tasks.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#999; padding:10px 0;">太棒了！暂时没有截止中的作业了。</p>';
+                return;
+            }
+
+            list.innerHTML = tasks.map(t => {
+                const diff = new Date(t.date) - new Date();
+                const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                const urgencyStyle = days <= 2 ? 'font-weight:bold; color: #ff7675;' : '';
+                const timeText = days > 0 ? `剩 ${days} 天` : (days === 0 ? '⏰ 今天截止' : '⚠️ 已逾期');
+
+                return `
+                    <div class="task-item">
+                        <div class="task-info">
+                            <strong>${t.name}</strong>
+                            <small style="color:var(--text-secondary);">截止: ${t.date}</small>
+                        </div>
+                        <div class="task-days" style="${urgencyStyle}">${timeText}</div>
+                        <div onclick="deleteTask(${t.id})" style="cursor:pointer; margin-left:10px; font-size:1.3rem;" title="标记已完成">✅</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            localStorage.setItem('stu_tasks_v2', JSON.stringify(tasks));
+            updateScore(5); // 额外奖励 5 星
+            renderTasks();
+        }
+
+        // --- 备份与防丢失功能 (双保险) ---
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ notes, tasks, score }));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `学霸助手备份_${new Date().toLocaleDateString()}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.notes && data.tasks) {
+                        notes = data.notes;
+                        tasks = data.tasks;
+                        score = data.score || 0;
+                        localStorage.setItem('stu_notes_v2', JSON.stringify(notes));
+                        localStorage.setItem('stu_tasks_v2', JSON.stringify(tasks));
+                        localStorage.setItem('stu_score', score);
+                        alert("🎉 资料成功同步并还原！");
+                        renderNotes();
+                        renderTasks();
+                        document.getElementById('starScore').innerText = score;
+                    } else {
+                        alert("导入的文件格式不正确哦。");
+                    }
+                } catch (err) {
+                    alert("文件解析出错。");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // --- 解压功能：泡泡纸与呼吸打卡 ---
+        function renderBubbles() {
+            const wrap = document.getElementById('bubbleWrap');
+            wrap.innerHTML = '';
+            // 一共 12 个泡泡
+            for (let i = 0; i < 12; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.onclick = function() {
+                    if (!bubble.classList.contains('popped')) {
+                        bubble.classList.add('popped');
+                        // 播放软爆破音（通过简单震动或音效提示，这里用微弱震动/打卡加积分模拟）
+                        updateScore(1);
+                        if (navigator.vibrate) navigator.vibrate(20);
+                        checkAllPopped();
+                    }
+                };
+                wrap.appendChild(bubble);
+            }
+        }
+
+        function checkAllPopped() {
+            const all = document.querySelectorAll('.bubble');
+            const popped = document.querySelectorAll('.bubble.popped');
+            if (all.length === popped.length) {
+                setTimeout(() => {
+                    alert("捏完啦！压力值 -100% 🧘，重置一盘吧！");
+                    renderBubbles();
+                }, 300);
+            }
+        }
+
+        function breatheAward() {
+            alert("深呼吸打卡成功！每次冥想放松都非常有益于专注力哦！获得 +5 🌟");
+            updateScore(5);
+        }
+
+        // 自律打卡积分
+        function awardHabit(checkbox, points) {
+            if (checkbox.checked) {
+                updateScore(points);
+            } else {
+                updateScore(-points);
+            }
+        }
+
+        // --- 初始化加载 ---
+        window.onload = () => {
+            // 加载主题
+            const savedTheme = localStorage.getItem('stu_theme') || 'blue';
+            setTheme(savedTheme);
+
+            // 渲染数据
+            document.getElementById('starScore').innerText = score;
+            renderNotes();
+            renderTasks();
+            renderBubbles();
+        };
+    </script>
+</body>
+</html>
